@@ -9,6 +9,7 @@ module MESS
   require_relative 'entities/expression.rb'
   require_relative 'entities/property.rb'
   require_relative 'entities/color.rb'
+  require_relative 'entities/measurement.rb'
 
   class Transformer
     def transform(parser_output)

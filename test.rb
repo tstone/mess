@@ -6,7 +6,7 @@ require 'pp'
 
 less = "
 @color: #ff0000;
-@offset: 10;
+@offset: 10px;
 @var: rgb( 100 , 4 , 255 ) -5+@offset;
 
 #footer {

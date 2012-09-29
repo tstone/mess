@@ -19,22 +19,22 @@ module MESS
     rule(:semicolon)            { str(';') >> space? }
     rule(:semicolon?)           { semicolon.maybe }
     rule(:operator)             { space? >> match('[+\-\\*]').as(:operator) >> space? }
-    rule(:number)               { match['0-9'].repeat.as(:number) }
+    rule(:number)               { match['0-9'].repeat(1) }
     rule(:hex_char)             { match('[0-9a-fA-F]') }
 
     # Built-in functions
     rule(:color_function)       { (str('lighten') | str('darken') | str('saturate') | str('desaturate') | str('fakein') | str('fakeout') | str('fade') | str('spin') | str('mix')).as(:builtin_func) >> space? }
 
     # Measurements
-    rule(:percent)              { number >> str('%') >> space? }
-    rule(:inch)                 { number >> str('in') >> space? }
-    rule(:cm)                   { number >> str('cm') >> space? }
-    rule(:mm)                   { number >> str('mm') >> space? }
-    rule(:em)                   { number >> str('em') >> space? }
-    rule(:ex)                   { number >> str('ex') >> space? }
-    rule(:pt)                   { number >> str('pt') >> space? }
-    rule(:pc)                   { number >> str('pc') >> space? }
-    rule(:px)                   { number >> str('px') >> space? }
+    rule(:percent)              { number.as(:percent) >> str('%') >> space? }
+    rule(:inch)                 { number.as(:in) >> str('in') >> space? }
+    rule(:cm)                   { number.as(:cm) >> str('cm') >> space? }
+    rule(:mm)                   { number.as(:mm) >> str('mm') >> space? }
+    rule(:em)                   { number.as(:em) >> str('em') >> space? }
+    rule(:ex)                   { number.as(:ex) >> str('ex') >> space? }
+    rule(:pt)                   { number.as(:pt) >> str('pt') >> space? }
+    rule(:pc)                   { number.as(:pc) >> str('pc') >> space? }
+    rule(:px)                   { number.as(:px) >> str('px') >> space? }
     rule(:measurement)          { (percent | inch | cm | mm | em | ex | pt | pc | px).as(:measurement) }
 
     # Colors
@@ -56,8 +56,8 @@ module MESS
     #rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
     #rule(:arg_expression)       { function_call | variable | with_op | simple_arg_value }
     #rule(:value_expression)     { function_call | variable | with_op | simple_value }
-    rule(:arg_expression)       { function_call | variable | simple_arg_value }
-    rule(:value_expression)     { function_call | variable | simple_value }
+    rule(:arg_expression)       { function_call | variable | measurement | simple_arg_value }
+    rule(:value_expression)     { function_call | variable | measurement | simple_value }
     rule(:selector)             { match('[A-Za-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
     rule(:property)             { match('[A-Za-z0-9-]').repeat(1).as(:property) >> space? }
     rule(:arg)                  { variable.as(:arg) >> (colon >> simple_arg_value.as(:arg_val)).maybe }
