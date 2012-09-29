@@ -22,8 +22,16 @@ module MESS
       end
 
       def operate(operator, right)
+        if operator.to_s.size == 1
+          operate_math(operator, right)
+        else
+          operate_func(operator, right)
+        end
+      end
 
-        puts "\n\nColorExpr operate, right: #{right}\n\n"
+      private
+
+      def operate_math(operator, right)
         op = operator.to_sym
         r_delta = 0
         g_delta = 0
@@ -37,8 +45,6 @@ module MESS
           r_delta = g_delta = b_delta = right.to_i
         end
 
-        # TODO: This mutates the color.  Is that right or wrong?
-
         @color.red = @color.red.send(op, r_delta)
         @color.green = @color.green.send(op, g_delta)
         @color.blue = @color.blue.send(op, b_delta)
@@ -46,7 +52,30 @@ module MESS
         render
       end
 
-      private
+      def operate_func(func, right)
+        case func
+        when :desaturate
+          @color.adjust_saturation(-right)
+        when :saturate
+          @color.adjust_saturation(right)
+        when :lighten
+          @color.adjust_brightness(right)
+        when :darken
+          @color.adjust_brightness(-right)
+        when :fadein
+          @alpha += right * 0.1
+        when :fadeout
+          @alpha -= right * 0.1
+        when :spin
+          @color.adjust_hue(right)
+        when :mix
+          fail "Function `mix` is not yet implemented."
+        else
+          fail "Unknown function `#{func}`."
+        end
+
+        render
+      end
 
       def translate
         @alpha = 1

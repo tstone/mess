@@ -14,7 +14,6 @@ module MESS
       end
 
       def render(space_depth)
-        puts "render prop #@name, #@value"
         val = if @value.respond_to?(:render)
           @value.render
         else

@@ -13,14 +13,15 @@ module MESS
     def transform_entity(entity)
       case entity.keys[0]
       when :block then return Entities::Block.new(self, entity)
-      when :var_def then return Entities::VariableDefinition.new(self, entity)
-      when :var then return Entities::Variable.new(self, entity)
-      when :style_dec then return Entities::Style.new(self, entity)
-      when :expression then return Entities::Expression.new(self, entity)
-      when :prop_def then return Entities::Property.new(self, entity)
       when :color then return Entities::ColorExpr.new(self, entity)
+      when :expression then return Entities::Expression.new(self, entity)
+      when :function then return Entities::Function.new(self, entity)
       when :measurement then return Entities::Measurement.new(self, entity)
       #when :mixin_definition then return MESS::Entities::MixinDefinition(self, entity)
+      when :prop_def then return Entities::Property.new(self, entity)
+      when :style_dec then return Entities::Style.new(self, entity)
+      when :var then return Entities::Variable.new(self, entity)
+      when :var_def then return Entities::VariableDefinition.new(self, entity)
       else
         puts "Entity type not setup for '#{entity.keys[0]}'"
       end

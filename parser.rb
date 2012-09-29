@@ -23,7 +23,7 @@ module MESS
     rule(:hex_char)             { match('[0-9a-fA-F]') }
 
     # Built-in functions
-    rule(:color_function)       { (str('lighten') | str('darken') | str('saturate') | str('desaturate') | str('fakein') | str('fakeout') | str('fade') | str('spin') | str('mix')).as(:builtin_func) >> space? }
+    rule(:color_function)       { (str('lighten') | str('darken') | str('saturate') | str('desaturate') | str('fadein') | str('fadeout') | str('fade') | str('spin') | str('mix')).as(:function) >> space? }
 
     # Measurements
     rule(:percent)              { number.as(:percent) >> str('%') >> space? }
@@ -50,7 +50,7 @@ module MESS
     rule(:simple_value)         { match['^;'].repeat(1) }
     rule(:simple_arg_value)     { match['^,)'].repeat(1) }
     rule(:value)                { variable | simple_value }
-    rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
+    rule(:function_call)        { color_function >> arg_call_list }
     rule(:selector)             { match('[A-Za-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
     rule(:property)             { match('[A-Za-z0-9-]').repeat(1).as(:property) >> space? }
     rule(:arg)                  { variable.as(:arg) >> (colon >> simple_arg_value.as(:arg_val)).maybe }

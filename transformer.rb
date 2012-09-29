@@ -2,14 +2,15 @@ module MESS
   module Transformative; end
 
   require_relative 'transformative'
-  require_relative 'entities/block.rb'
-  require_relative 'entities/variable_definition.rb'
-  require_relative 'entities/variable.rb'
-  require_relative 'entities/style.rb'
-  require_relative 'entities/expression.rb'
-  require_relative 'entities/property.rb'
-  require_relative 'entities/color.rb'
-  require_relative 'entities/measurement.rb'
+  require_relative 'entities/block'
+  require_relative 'entities/variable_definition'
+  require_relative 'entities/variable'
+  require_relative 'entities/style'
+  require_relative 'entities/expression'
+  require_relative 'entities/property'
+  require_relative 'entities/color'
+  require_relative 'entities/measurement'
+  require_relative 'entities/function'
 
   class Transformer
     def transform(parser_output)

@@ -59,11 +59,6 @@ module MESS
           fail "#{left_hand} does not support the `#{operator}` operation."
         end
       end
-
-      def do_builtin_function(entity)
-        # TODO
-      end
-
     end
   end
 end
