@@ -5,6 +5,7 @@ module MESS
   require_relative 'entities/variable.rb'
   require_relative 'entities/style.rb'
   require_relative 'entities/expression.rb'
+  require_relative 'entities/property.rb'
 
   class Transformer
     def transform(parser_output)
@@ -31,7 +32,7 @@ module MESS
       when :var_def then return Entities::Variable.new(self, entity)
       when :style_dec then return Entities::Style.new(self, entity)
       when :expression then return Entities::Expression.new(self, entity)
-      #when :prop_def then return MESS::Entities::PropertyDefinition(self, entity)
+      when :prop_def then return Entities::Property.new(self, entity)
       #when :mixin_definition then return MESS::Entities::MixinDefinition(self, entity)
       else
         puts "Entity type not setup for '#{entity.keys[0]}'"

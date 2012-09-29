@@ -1,6 +1,7 @@
 
 require_relative 'parser'
 require_relative 'transformer'
+require_relative 'translator'
 require 'pp'
 
 less = "@offset: 10;
@@ -10,6 +11,6 @@ less = "@offset: 10;
 }"
 
 p = MESS::Parser.new.parse(less)
-pp p
 t = MESS::Transformer.new.transform(p)
-pp t
+l = MESS::Translator.new.translate(t)
+pp l

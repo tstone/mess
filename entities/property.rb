@@ -1,25 +1,25 @@
 module MESS
   module Entities
-    class Variable
+    class Property
       include Transformative
 
       attr_reader :name, :value
 
       def initialize(parent, entity)
         @parent = parent
-        @entity = entity[:var_def]
-        parent.variables << self
+        @entity = entity[:prop_def]
+        parent.properties << self
         parse
       end
 
       def to_s
-        "<Variable: #@name>"
+        "<Property: #@name>"
       end
 
       private
 
       def parse
-        @name = @entity[:var]
+        @name = @entity[:property]
         @raw_value = @entity[:value]
         if @raw_value.is_a?(Hash) then
           @value = transform_entity(@raw_value)

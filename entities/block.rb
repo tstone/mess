@@ -11,6 +11,17 @@ module MESS
         @variables = []
         @styles = []
         @mixins = []
+
+        if entity.is_a?(Hash) and entity.has_key?(:block)
+          @entity = entity[:block]
+          parse
+        end
+      end
+
+      private
+
+      def parse
+        transform_entities(@entity)
       end
     end
   end

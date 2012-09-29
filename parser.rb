@@ -65,7 +65,7 @@ module MESS
     rule(:arg_call_list)        { lparen >> (value_var_expr >> comma?).repeat(0).as(:parameters) >> rparen }
     rule(:mixin_inc)            { selector.as(:mixin) >> arg_call_list.maybe >> semicolon }
     rule(:variable_definition)  { variable >> colon >> value_var_expr.as(:value) >> semicolon? }
-    rule(:property_definition)  { property >> colon >> value_var_expr >> semicolon? }
+    rule(:property_definition)  { property >> colon >> value_var_expr.as(:value) >> semicolon? }
     rule(:style_declaration)    { selector >> block }
     rule(:mixin_definition)     { selector >> arg_def_list >> block }
     rule(:snippet)              { variable_definition.as(:var_def) | mixin_definition.as(:mixin_def) | style_declaration.as(:style_dec) }
