@@ -3,14 +3,13 @@ require_relative 'parser'
 require_relative 'transformer'
 require 'pp'
 
-less = "#footer {
-  color: #003300;
+less = "@offset: 10;
+@var: rgb( 100 , 4 , 255 ) -5+@offset;
+#footer {
+  color: @var;
 }"
-
-less = "@var: 5-5"
 
 p = MESS::Parser.new.parse(less)
 pp p
-#t = MESS::Transformer.new.transform(p)
-# puts MESS::Transformer.new.transform(p)
-#pp t
+t = MESS::Transformer.new.transform(p)
+pp t

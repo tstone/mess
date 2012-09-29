@@ -19,7 +19,7 @@ module MESS
     rule(:semicolon)            { str(';') >> space? }
     rule(:semicolon?)           { semicolon.maybe }
     rule(:operator)             { space? >> match('[+\-\\*]').as(:operator) >> space? }
-    rule(:number)               { match['0-9'].repeat }
+    rule(:number)               { match['0-9'].repeat.as(:number) }
     rule(:hex_char)             { match('[0-9a-fA-F]') }
 
     # Built-in functions
@@ -39,10 +39,10 @@ module MESS
 
     # Colors
     rule(:hex_color)            { (str('#') >> (hex_char.repeat(3) | hex_char.repeat(6))).as(:hex_color) >> space? }
-    rule(:rgb_color)            { (str('rgb(') >> space? >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> space? >> rparen).as(:rgb_color) >> space? }
-    rule(:rgba_color)           { (str('rgba(') >> space? >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> space? >>  rparen).as(:rgba_color) >> space? }
-    rule(:hsl_color)            { (str('hsl(') >> space? >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> space? >> rparen).as(:hsl_color) >> space? }
-    rule(:hsla_color)           { (str('hsla(') >> space? >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> comma >> number.repeat(1,3) >> space? >>  rparen).as(:hsla_color) >> space? }
+    rule(:rgb_color)            { (str('rgb(') >> space? >> number.as(:r) >> comma >> number.as(:g) >> comma >> number.as(:b) >> space? >> rparen).as(:rgb_color) >> space? }
+    rule(:rgba_color)           { (str('rgba(') >> space? >> number.as(:r) >> comma >> number.as(:g) >> comma >> number.as(:b) >> comma >> number.as(:a) >> space? >>  rparen).as(:rgba_color) >> space? }
+    rule(:hsl_color)            { (str('hsl(') >> space? >> number.as(:h) >> comma >> number.as(:s) >> comma >> number.as(:l) >> space? >> rparen).as(:hsl_color) >> space? }
+    rule(:hsla_color)           { (str('hsla(') >> space? >> number.as(:h) >> comma >> number.as(:s) >> comma >> number.as(:l) >> comma >> number.as(:a) >> space? >>  rparen).as(:hsla_color) >> space? }
     rule(:color)                { (hex_color | rgb_color | rgba_color | hsl_color | hsla_color).as(:color) }
 
     # Values/Variables
@@ -50,7 +50,7 @@ module MESS
     rule(:simple_value)         { match['^;'].repeat(1) }
     rule(:simple_arg_value)     { match['^,)'].repeat(1) }
     rule(:value)                { variable | simple_value }
-    rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).as(:operation).repeat >> space? }
+    rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).repeat >> space? }
     rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
     rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
     rule(:value_var_expr)       { function_call | with_op | simple_arg_value }
