@@ -40,10 +40,9 @@ module MESS
       if left.respond_to?(:operate)
         left.operate(operator, right)
       else
-        # Assume it's just a numeric operation
         #begin
-          right = right.render if right.respond_to?(:render)
-          left.to_i.send(operator.to_sym, right.to_i)
+          right = right.str.to_i if right.respond_to?(:str)
+          left.to_i.send(operator.to_sym, right)
         #rescue
         #  fail "#{left} does not support the `#{operator}` operation."
         #end

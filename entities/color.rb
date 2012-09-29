@@ -3,6 +3,8 @@ require 'color'
 module MESS
   module Entities
     class ColorExpr
+      attr_reader :color, :format, :alpha
+
       def initialize(parent, entity)
         @parent = parent
         @entity = entity[:color]
@@ -19,17 +21,27 @@ module MESS
         end
       end
 
-      def operate(operator, right_hand)
-        # Assume integer for now
-        mod = right_hand.to_i
+      def operate(operator, right)
+
+        puts "\n\nColorExpr operate, right: #{right}\n\n"
         op = operator.to_sym
+        r_delta = 0
+        g_delta = 0
+        b_delta = 0
 
-        # TODO: This mutates this color!
-        # it should dup then change the dup... or something
+        if right.respond_to?(:color)
+          r_delta = right.color.red
+          g_delta = right.color.green
+          b_delta = right.color.blue
+        else
+          r_delta = g_delta = b_delta = right.to_i
+        end
 
-        @color.red = @color.red.send(op, mod)
-        @color.green = @color.green.send(op, mod)
-        @color.blue = @color.blue.send(op, mod)
+        # TODO: This mutates the color.  Is that right or wrong?
+
+        @color.red = @color.red.send(op, r_delta)
+        @color.green = @color.green.send(op, g_delta)
+        @color.blue = @color.blue.send(op, b_delta)
 
         render
       end
@@ -37,7 +49,7 @@ module MESS
       private
 
       def translate
-        @a = 1
+        @alpha = 1
         @color = case @format
         when :hex_color then Color::RGB.from_html(@entity[:hex_color].str)
         when :rgb_color then
@@ -45,14 +57,14 @@ module MESS
           Color::RGB.new(rgb[:r].to_i, rgb[:g].to_i, rgb[:b].to_i)
         when :rgba_color then
           rgb = @entity[:rgb_color]
-          @a = rgb[:a]
+          @alpha = rgb[:a]
           Color::RGB.new(rgb[:r].to_i, rgb[:g].to_i, rgb[:b].to_i)
         when :hsl_color then render_hsl
           hsl = @entity[:hsl_color]
           Color::HSL.new(hsl[:h].to_i, hsl[:s].to_i, hsl[:l].to_i).to_rgb
         when :hsla_color then render_hsla
           hsl = @entity[:hsl_color]
-          @a = hsl[:a]
+          @alpha = hsl[:a]
           Color::HSL.new(hsl[:h].to_i, hsl[:s].to_i, hsl[:l].to_i).to_rgb
         end
       end
@@ -66,7 +78,7 @@ module MESS
       end
 
       def render_rgba
-        "rgb(#{@color.red}, #{@color.green}, #{@color.blue}, #{@a})"
+        "rgb(#{@color.red}, #{@color.green}, #{@color.blue}, #{@alpha})"
       end
 
       def render_hsl
@@ -76,7 +88,7 @@ module MESS
 
       def render_hsla
         hsl = @color.to_hsl
-        "hsla(#{hsl.hue}, #{hsl.saturation}, #{hsl.lightness}, #{@a})"
+        "hsla(#{hsl.hue}, #{hsl.saturation}, #{hsl.lightness}, #{@alpha})"
       end
     end
   end

@@ -43,8 +43,15 @@ module MESS
       def do_operator(entity)
         left_entity = entity.dup.reject!{ |k| k == :operation }
         left_hand = transform_entity(left_entity)
+
         operator = entity[:operation][:operator]
-        right_hand = render_unknown_entity(entity[:operation][:right_hand])
+
+        right_entity = entity[:operation][:right_hand]
+        right_hand = if right_entity.is_a?(Hash)
+          transform_entity(right_entity)
+        else
+          right_entity
+        end
 
         if left_hand.respond_to?(:operate)
           left_hand.operate(operator.to_sym, right_hand)
