@@ -12,7 +12,13 @@ module MESS
       end
 
       def render(space_depth)
-        (" " * space_depth) + "#{@name}: @value;"
+        val = if @value.respond_to?(:render)
+          @value.render
+        else
+          @value
+        end
+
+        (" " * space_depth) + "#@name: #{val};"
       end
 
       def to_s
@@ -23,11 +29,10 @@ module MESS
 
       def parse
         @name = @entity[:property]
-        raw = @entity[:value]
-        if raw.is_a?(Hash) then
-          @value = transform_entity(raw)
+        @value = if @entity[:value].is_a?(Hash) then
+          transform_entity(@entity[:value])
         else
-          @value = raw
+          @entity[:value]
         end
 
         @parent.add_property(@name, self)

@@ -53,7 +53,7 @@ module MESS
     rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).repeat >> space? }
     rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
     rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
-    rule(:value_var_expr)       { function_call | with_op | simple_arg_value }
+    rule(:value_var_expr)       { function_call | variable | with_op | simple_arg_value }
     rule(:selector)             { match('[a-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
     rule(:property)             { match('[a-z0-9-]').repeat(1).as(:property) >> space? }
     rule(:arg)                  { variable.as(:arg) >> arg_val.maybe }

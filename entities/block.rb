@@ -30,7 +30,13 @@ module MESS
         0
       end
 
-      def get_property_value(prop)
+      def get_variable_value(key)
+        var = @variables[key.to_sym]
+        if var.nil?
+          @parent.get_variable_value(key)
+        else
+          var.render
+        end
       end
     end
   end

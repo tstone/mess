@@ -3,10 +3,12 @@ module MESS
 
   require_relative 'transformative'
   require_relative 'entities/block.rb'
+  require_relative 'entities/variable_definition.rb'
   require_relative 'entities/variable.rb'
   require_relative 'entities/style.rb'
   require_relative 'entities/expression.rb'
   require_relative 'entities/property.rb'
+  require_relative 'entities/color.rb'
 
   class Transformer
     def transform(parser_output)
