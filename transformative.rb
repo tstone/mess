@@ -18,7 +18,7 @@ module MESS
       when :style_dec then return Entities::Style.new(self, entity)
       when :expression then return Entities::Expression.new(self, entity)
       when :prop_def then return Entities::Property.new(self, entity)
-      when :color then return Entities::Color.new(self, entity)
+      when :color then return Entities::ColorExpr.new(self, entity)
       when :measurement then return Entities::Measurement.new(self, entity)
       #when :mixin_definition then return MESS::Entities::MixinDefinition(self, entity)
       else

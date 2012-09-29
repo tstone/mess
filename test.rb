@@ -4,15 +4,10 @@ require_relative 'transformer'
 require_relative 'renderer'
 require 'pp'
 
-less = "
-@offset: 10px;
-@color: #ff0000;
-@lesser_color: @color - 100;
+less = "@red: #8c0000;
 
-#footer {
-  color: @lesser_color;
-  font-family: Arial;
-  line-height: @offset
+h2 {
+    color: @red - 100;
 }"
 
 
