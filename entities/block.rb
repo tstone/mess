@@ -8,20 +8,21 @@ module MESS
 
       def initialize(parent, entity)
         @parent = parent
-        @variables = []
-        @styles = []
-        @mixins = []
-
-        if entity.is_a?(Hash) and entity.has_key?(:block)
-          @entity = entity[:block]
-          parse
-        end
+        @variables = {}
+        @styles = {}
+        @mixins = {}
       end
 
-      private
+      def add_style(key, val)
+        @styles[key.to_sym] = val
+      end
 
-      def parse
-        transform_entities(@entity)
+      def add_variable(key, val)
+        @variables[key.to_sym] = val
+      end
+
+      def add_mixin(key, val)
+        @mixins[key.to_sym] = val
       end
     end
   end

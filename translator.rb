@@ -3,8 +3,9 @@ module MESS
     def translate(document)
       @doc = document
       @doc.styles.each do |style|
-        puts style
+        # style.render
       end
+      @doc
     end
   end
 end

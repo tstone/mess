@@ -8,7 +8,6 @@ module MESS
       def initialize(parent, entity)
         @parent = parent
         @entity = entity[:var_def]
-        parent.variables << self
         parse
       end
 
@@ -20,12 +19,14 @@ module MESS
 
       def parse
         @name = @entity[:var]
-        @raw_value = @entity[:value]
-        if @raw_value.is_a?(Hash) then
-          @value = transform_entity(@raw_value)
+        raw = @entity[:value]
+        if raw.is_a?(Hash) then
+          @value = transform_entity(raw)
         else
-          @value = @raw_value
+          @value = raw
         end
+
+        @parent.add_variable(@name, self)
       end
     end
   end
