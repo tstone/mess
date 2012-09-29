@@ -5,12 +5,12 @@ require_relative 'renderer'
 require 'pp'
 
 less = "
-@color: #ff0000;
 @offset: 10px;
-@var: rgb( 100 , 4 , 255 ) -5+@offset;
+@color: #ff0000;
+@lesser_color: @color - 100;
 
 #footer {
-  color: @color;
+  color: @lesser_color;
   font-family: Arial;
   line-height: @offset
 }"
@@ -18,11 +18,8 @@ less = "
 
 p = MESS::Parser.new.parse(less)
 pp p
-puts "\n\n"
+puts "\n\n\n"
 
 t = MESS::Transformer.new.transform(p)
-pp t
-puts "\n\n"
-
 r = MESS::Renderer.new.render(t)
 puts r

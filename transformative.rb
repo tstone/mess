@@ -26,8 +26,27 @@ module MESS
       end
     end
 
+    def get_variable_def(key)
+      @parent.get_variable_def(key)
+    end
+
     def get_variable_value(key)
       @parent.get_variable_value(key)
+    end
+
+    protected
+
+    def do_operation(left, operator, right)
+      if left.respond_to?(:operate)
+        left.operate(operator, right)
+      else
+        # Assume it's just a numeric operation
+        begin
+          left.to_i.send(operator.to_sym, right.render.to_i)
+        rescue
+          fail "#{left} does not support the `#{operator}` operation."
+        end
+      end
     end
   end
 end

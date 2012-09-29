@@ -15,6 +15,10 @@ module MESS
         end
       end
 
+      def operate(operator, right_hand)
+        puts "OPERATE ON COLOR (TODO)"
+      end
+
       private
 
       def render_hex

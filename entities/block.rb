@@ -30,13 +30,21 @@ module MESS
         0
       end
 
-      def get_variable_value(key)
+      def get_variable_def(key)
         var = @variables[key.to_sym]
         if var.nil?
-          @parent.get_variable_value(key)
+          if @parent.nil?
+            fail "Variable `#{key}` not defined."
+          else
+            @parent.get_variable_def(key)
+          end
         else
-          var.render
+          var
         end
+      end
+
+      def get_variable_value(key)
+        get_variable_def(key).render
       end
     end
   end

@@ -8,10 +8,13 @@ module MESS
       def initialize(parent, entity)
         @parent = parent
         @entity = entity[:prop_def]
-        parse
+        @name = @entity[:property]
+        @value = Entities::Expression.new(self, @entity)
+        @parent.add_property(@name, self)
       end
 
       def render(space_depth)
+        puts "render prop #@name, #@value"
         val = if @value.respond_to?(:render)
           @value.render
         else
@@ -23,19 +26,6 @@ module MESS
 
       def to_s
         "<Property: #@name>"
-      end
-
-      private
-
-      def parse
-        @name = @entity[:property]
-        @value = if @entity[:value].is_a?(Hash) then
-          transform_entity(@entity[:value])
-        else
-          @entity[:value]
-        end
-
-        @parent.add_property(@name, self)
       end
     end
   end
