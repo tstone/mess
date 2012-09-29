@@ -11,8 +11,8 @@ module MESS
     rule(:at)                   { str('@') >> space? }
     rule(:comma)                { space? >> str(',') >> space? }
     rule(:comma?)               { comma.maybe }
-    rule(:lbrace)               { str('{') >> space? }
-    rule(:rbrace)               { str('}') >> space? }
+    rule(:lbrace)               { space? >> str('{') >> space? }
+    rule(:rbrace)               { space? >> str('}') >> space? }
     rule(:lparen)               { str('(') >> space? }
     rule(:rparen)               { str(')') >> space? }
     rule(:colon)                { str(':') >> space? }
@@ -35,7 +35,7 @@ module MESS
     rule(:pt)                   { number >> str('pt') >> space? }
     rule(:pc)                   { number >> str('pc') >> space? }
     rule(:px)                   { number >> str('px') >> space? }
-    rule(:measurement)          { percent | inch | cm | mm | em | ex | pt | pc | px }
+    rule(:measurement)          { (percent | inch | cm | mm | em | ex | pt | pc | px).as(:measurement) }
 
     # Colors
     rule(:hex_color)            { (str('#') >> (hex_char.repeat(3) | hex_char.repeat(6))).as(:hex_color) >> space? }
@@ -50,27 +50,32 @@ module MESS
     rule(:simple_value)         { match['^;'].repeat(1) }
     rule(:simple_arg_value)     { match['^,)'].repeat(1) }
     rule(:value)                { variable | simple_value }
-    rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).repeat >> space? }
-    rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
     rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
-    rule(:value_var_expr)       { function_call | variable | with_op | simple_arg_value }
-    rule(:selector)             { match('[a-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
-    rule(:property)             { match('[a-z0-9-]').repeat(1).as(:property) >> space? }
-    rule(:arg)                  { variable.as(:arg) >> arg_val.maybe }
-    rule(:arg_val)              { colon >> match('[^,)]').repeat(1).as(:arg_val) }
+    # Operator support temporary removed
+    #rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).repeat >> space? }
+    #rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
+    #rule(:arg_expression)       { function_call | variable | with_op | simple_arg_value }
+    #rule(:value_expression)     { function_call | variable | with_op | simple_value }
+    rule(:arg_expression)       { function_call | variable | simple_arg_value }
+    rule(:value_expression)     { function_call | variable | simple_value }
+    rule(:selector)             { match('[A-Za-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
+    rule(:property)             { match('[A-Za-z0-9-]').repeat(1).as(:property) >> space? }
+    rule(:arg)                  { variable.as(:arg) >> (colon >> simple_arg_value.as(:arg_val)).maybe }
 
     # Grammar
     rule(:block)                { lbrace >> block_content.repeat.as(:block) >> rbrace }
     rule(:arg_def_list)         { lparen >> (arg >> comma?).repeat(0).as(:arglist) >> rparen }
-    rule(:arg_call_list)        { lparen >> (value_var_expr >> comma?).repeat(0).as(:parameters) >> rparen }
-    rule(:mixin_inc)            { selector.as(:mixin) >> arg_call_list.maybe >> semicolon }
-    rule(:variable_definition)  { variable >> colon >> value_var_expr.as(:value) >> semicolon? }
-    rule(:property_definition)  { property >> colon >> value_var_expr.as(:value) >> semicolon? }
+    rule(:arg_call_list)        { lparen >> (arg_expression >> comma?).repeat(0).as(:parameters) >> rparen }
+    rule(:mixin_inc)            { selector.as(:mixin) >> (arg_call_list.maybe >> semicolon? | semicolon) }
+    rule(:value_definition)     { colon >> value_expression.as(:value) >> semicolon? }
+    rule(:variable_definition)  { variable >> value_definition }
+    rule(:property_definition)  { property >> value_definition }
     rule(:style_declaration)    { selector >> block }
     rule(:mixin_definition)     { selector >> arg_def_list >> block }
     rule(:snippet)              { variable_definition.as(:var_def) | mixin_definition.as(:mixin_def) | style_declaration.as(:style_dec) }
     rule(:block_content)        { snippet | property_definition.as(:prop_def) | mixin_inc.as(:mixin_inc) }
     rule(:document)             { space? >> snippet.repeat }
+    #rule(:document) { selector >> lbrace >> block_content >> rbrace >> space? }
 
     root :document
   end
