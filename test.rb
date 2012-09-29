@@ -4,10 +4,18 @@ require_relative 'transformer'
 require_relative 'renderer'
 require 'pp'
 
-less = "@red: #8c0000;
+less = "@the-border: 1px;
+@base-color: #111;
+@red:        #842210;
 
-h2 {
-    color: @red - 100;
+#header {
+  color: @base-color * 3;
+  border-left: @the-border;
+  border-right: @the-border * 2;
+}
+#footer {
+  color: @base-color + #003300;
+  border-color: desaturate(@red, 10%);
 }"
 
 

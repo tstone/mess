@@ -4,9 +4,9 @@ module MESS
       @doc = document
       @css = ""
       @doc.styles.each do |style, instance|
-        @css << instance.render
+        @css << instance.render + "\n"
       end
-      @css
+      @css.strip
     end
   end
 end

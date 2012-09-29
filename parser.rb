@@ -56,7 +56,7 @@ module MESS
     rule(:arg)                  { variable.as(:arg) >> (colon >> simple_arg_value.as(:arg_val)).maybe }
 
     # Expressions and Operations
-    rule(:arg_operation)        { operator >> arg_exression.as(:right_hand) }
+    rule(:arg_operation)        { operator >> arg_expression.as(:right_hand) }
     rule(:value_operation)      { operator >> value_expression.as(:right_hand) }
     rule(:arg_expression)       { (function_call | variable | measurement | color | simple_arg_value) >> arg_operation.as(:operation).maybe }
     rule(:value_expression)     { (function_call | variable | measurement | color | simple_value) >> value_operation.as(:operation).maybe }

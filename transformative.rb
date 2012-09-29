@@ -41,11 +41,12 @@ module MESS
         left.operate(operator, right)
       else
         # Assume it's just a numeric operation
-        begin
-          left.to_i.send(operator.to_sym, right.render.to_i)
-        rescue
-          fail "#{left} does not support the `#{operator}` operation."
-        end
+        #begin
+          right = right.render if right.respond_to?(:render)
+          left.to_i.send(operator.to_sym, right.to_i)
+        #rescue
+        #  fail "#{left} does not support the `#{operator}` operation."
+        #end
       end
     end
   end

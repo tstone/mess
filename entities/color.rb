@@ -24,6 +24,9 @@ module MESS
         mod = right_hand.to_i
         op = operator.to_sym
 
+        # TODO: This mutates this color!
+        # it should dup then change the dup... or something
+
         @color.red = @color.red.send(op, mod)
         @color.green = @color.green.send(op, mod)
         @color.blue = @color.blue.send(op, mod)
