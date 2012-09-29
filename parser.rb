@@ -51,18 +51,16 @@ module MESS
     rule(:with_op)              { ((color | measurement | variable) >> operator_expression).as(:expression) }
     rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
     rule(:value_var_expr)       { with_op | function_call | simple_arg_value }
-
-    # Things
     rule(:selector)             { match('[a-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
     rule(:property)             { match('[a-z0-9-]').repeat(1).as(:property) >> space? }
-    rule(:block)                { lbrace >> block_content.repeat.as(:block) >> rbrace }
     rule(:arg)                  { variable.as(:arg) >> arg_val.maybe }
     rule(:arg_val)              { colon >> match('[^,)]').repeat(1).as(:arg_val) }
+
+    # Grammar
+    rule(:block)                { lbrace >> block_content.repeat.as(:block) >> rbrace }
     rule(:arg_def_list)         { lparen >> (arg >> comma?).repeat(0).as(:arglist) >> rparen }
     rule(:arg_call_list)        { lparen >> (value_var_expr >> comma?).repeat(0).as(:parameters) >> rparen }
     rule(:mixin_inc)            { selector.as(:mixin) >> arg_call_list.maybe >> semicolon }
-
-    # Grammar
     rule(:variable_definition)  { variable >> colon >> value_var_expr >> semicolon? }
     rule(:property_definition)  { property >> colon >> value_var_expr >> semicolon? }
     rule(:style_declaration)    { selector >> block }
