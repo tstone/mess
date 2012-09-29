@@ -11,6 +11,10 @@ module MESS
         parse
       end
 
+      def render(space_depth)
+        (" " * space_depth) + "#{@name}: @value;"
+      end
+
       def to_s
         "<Property: #@name>"
       end
