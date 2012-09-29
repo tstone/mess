@@ -48,12 +48,12 @@ module MESS
     # Values/Variables
     rule(:variable)             { at >> match('[\w\-]').repeat(1).as(:var) }
     rule(:simple_value)         { match['^;'].repeat(1) }
-    rule(:simple_arg_value)    { match['^,)'].repeat(1) }
+    rule(:simple_arg_value)     { match['^,)'].repeat(1) }
     rule(:value)                { variable | simple_value }
     rule(:operator_expression)  { (operator >> (variable | number).as(:right_hand)).as(:operation).repeat >> space? }
-    rule(:with_op)              { ((color | measurement | variable) >> operator_expression).as(:expression) }
+    rule(:with_op)              { ((color | measurement | variable | number).as(:left_hand) >> operator_expression).as(:expression) }
     rule(:function_call)        { (color_function >> arg_call_list).as(:expression) }
-    rule(:value_var_expr)       { with_op | function_call | simple_arg_value }
+    rule(:value_var_expr)       { function_call | with_op | simple_arg_value }
     rule(:selector)             { match('[a-z0-9&:#*-.="\[\]]').repeat(1).as(:selector) >> space? }
     rule(:property)             { match('[a-z0-9-]').repeat(1).as(:property) >> space? }
     rule(:arg)                  { variable.as(:arg) >> arg_val.maybe }
@@ -64,7 +64,7 @@ module MESS
     rule(:arg_def_list)         { lparen >> (arg >> comma?).repeat(0).as(:arglist) >> rparen }
     rule(:arg_call_list)        { lparen >> (value_var_expr >> comma?).repeat(0).as(:parameters) >> rparen }
     rule(:mixin_inc)            { selector.as(:mixin) >> arg_call_list.maybe >> semicolon }
-    rule(:variable_definition)  { variable >> colon >> value_var_expr >> semicolon? }
+    rule(:variable_definition)  { variable >> colon >> value_var_expr.as(:value) >> semicolon? }
     rule(:property_definition)  { property >> colon >> value_var_expr >> semicolon? }
     rule(:style_declaration)    { selector >> block }
     rule(:mixin_definition)     { selector >> arg_def_list >> block }
