@@ -10,7 +10,6 @@ module MESS
 
       def render
         func = @entity[:function].to_sym
-        puts "FUNC: #{func}"
         if [:desaturate, :saturate, :lighten, :darken, :fadein, :fadeout, :spin, :mix].include?(func)
           builtin(func)
         else
@@ -21,7 +20,6 @@ module MESS
       protected
 
       def builtin(func)
-        puts "BUILTIN func"
         params = @entity[:parameters]
         left = transform_entity(params[0])
         right = transform_entity(params[1])
