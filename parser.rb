@@ -1,6 +1,9 @@
 require 'parslet'
 
 module MESS
+
+  # Parser:
+  # Turn a raw string into a series of hashes, arrays, and symbols
   class Parser < Parslet::Parser
     # Chars
     rule(:space)                { match('\s').repeat(1) }
