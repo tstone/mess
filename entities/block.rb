@@ -3,12 +3,11 @@ module MESS
     class Block
       include Transformative
 
-      attr_reader :selector, :variables, :styles, :mixins
+      attr_reader :seletor, :variables, :styles, :mixins
       attr_writer :variables, :styles, :mixins
 
-      def initialize(parent, entity)
-        @parent = parent
-        @selector = ""
+      def initialize(parent_block, entity)
+        @parent_block = parent_block
         @variables = {}
         @styles = {}
         @mixins = {}
@@ -26,17 +25,13 @@ module MESS
         @mixins[key.to_sym] = val
       end
 
-      def space_depth
-        0
-      end
-
       def get_variable_def(key)
         var = @variables[key.to_sym]
         if var.nil?
-          if @parent.nil?
+          if @parent_block.nil?
             fail "Variable `#{key}` not defined."
           else
-            @parent.get_variable_def(key)
+            @parent_block.get_variable_def(key)
           end
         else
           var
@@ -45,6 +40,11 @@ module MESS
 
       def get_variable_value(key)
         get_variable_def(key).render
+      end
+
+      def to_s
+        return "<Root>" if @parent_block == nil
+        "<Block: #{@selector}>"
       end
     end
   end

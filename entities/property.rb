@@ -13,14 +13,14 @@ module MESS
         @parent.add_property(@name, self)
       end
 
-      def render(space_depth)
+      def render
         val = if @value.respond_to?(:render)
           @value.render
         else
           @value
         end
 
-        (" " * space_depth) + "#@name: #{val};"
+        "  #@name: #{val};"
       end
 
       def to_s

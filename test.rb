@@ -16,6 +16,15 @@ less = "@the-border: 1px;
 #footer {
   color: @base-color + #003300;
   border-color: desaturate(@red, 10%);
+}
+#header {
+  h1 {
+    font-size: 26px;
+    font-weight: bold;
+  }
+  p { font-size: 12px;
+    a {text-decoration: none; }
+  }
 }"
 
 

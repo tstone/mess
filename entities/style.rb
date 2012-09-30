@@ -4,60 +4,63 @@ module MESS
   module Entities
     class Style < Block
 
-      attr_reader :properties
+      attr_reader :properties, :selector
       attr_writer :properties
 
-      def initialize(parent, entity)
+      def initialize(parent_block, entity)
         super
-        @entity = entity[:style_dec]
         @properties = {}
-        parse
+
+        @entity = entity[:style_dec]
+        transform_entities(@entity[:block])
+
+        @selector = @entity[:selector].str
+        @parent_block.add_style(@selector, self) unless @parent_block.nil?
       end
 
       def add_property(key, val)
         @properties[key.to_sym] = val
       end
 
-      def space_depth
-        @parent.space_depth + 4
-      end
-
-      def full_selector
-        sel = ""
-        sel = @parent.selector unless @parent.selector.nil?
-        sel << " #@selector"
-        sel.strip
-      end
-
       def render
-        @css = "#{full_selector} {\n"
+        @css = render_properties + render_nested_styles
+        @css.strip
+      end
 
-        # Properties
-        @properties.each do |prop, instance|
-          @css << instance.render(space_depth) + "\n"
+      def render_properties
+        @css = ""
+        if @properties.size > 0
+          @css << "#{full_selector_path} {\n"
+          @properties.each do |prop, instance|
+            @css << instance.render + "\n"
+          end
+          @css << "}"
         end
+        @css
+      end
 
-        # Nested styles
-        if (@styles.size > 0) then
+      def render_nested_styles
+        @css = ""
+        if @styles.size > 0
           @css << "\n"
           @styles.each do |style, instance|
-            @css << instance.render(space_depth) + "\n"
+            @css << instance.render + "\n"
           end
         end
+        @css
+      end
 
-        @css << "}"
+      def full_selector_path
+        if @parent_block.respond_to?(:full_selector_path)
+          parent_path = @parent_block.send(:full_selector_path)
+          "#{parent_path} #{@selector}"
+        else
+          @selector
+        end
       end
 
       def to_s
         "<Style: #@selector>"
-      end
-
-      protected
-
-      def parse
-        transform_entities(@entity[:block])
-        @selector = @entity[:selector]
-        @parent.add_style(@selector, self)
       end
     end
   end
