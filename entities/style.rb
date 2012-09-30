@@ -53,7 +53,12 @@ module MESS
       def full_selector_path
         if @parent_block.respond_to?(:full_selector_path)
           parent_path = @parent_block.send(:full_selector_path)
-          "#{parent_path} #{@selector}"
+          if @selector.start_with?('&')
+            sel = @selector[1, @selector.size]
+            "#{parent_path}#{sel}"
+          else
+            "#{parent_path} #{@selector}"
+          end
         else
           @selector
         end
