@@ -43,8 +43,8 @@ module MESS
         @css = ""
         if @styles.size > 0
           @css << "\n"
-          @styles.each do |style, instance|
-            @css << instance.render + "\n"
+          @styles.each do |style|
+            @css << style.render + "\n"
           end
         end
         @css

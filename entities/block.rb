@@ -9,12 +9,12 @@ module MESS
       def initialize(parent_block, entity)
         @parent_block = parent_block
         @variables = {}
-        @styles = {}
+        @styles = []
         @mixins = {}
       end
 
       def add_style(key, val)
-        @styles[key.to_sym] = val
+        @styles << val
       end
 
       def add_variable(key, val)
